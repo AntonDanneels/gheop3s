@@ -46,15 +46,16 @@ export enum Interval {
   DAILY = 24,
   WEEKLY = 7 * 24,
   BIWEEKLY = 2 * 7 * 24,
+  MONTHLY = 30 * 24,
   QUARTERLY = (365 / 4) * 24,
   YEARLY = 365 * 24,
 }
 
 function dosageToRate(dosage: number, dosageInterval: Interval) {
   if (dosageInterval === Interval.ANY) {
-    return Number.MAX_VALUE;
+    return 0;
   }
-  return dosage * dosageInterval;
+  return dosage * (1 / dosageInterval);
 }
 
 function dosageCompare(
@@ -66,7 +67,7 @@ function dosageCompare(
   let a = dosageToRate(dosageA, dosageAInterval);
   let b = dosageToRate(dosageB, dosageBInterval);
 
-  return a - b < 0 || Math.abs(a - b) <= 0.1;
+  return a >= b;
 }
 
 export class Gheop3sInput {
@@ -160,9 +161,9 @@ export const rules = [
   ),
   new Rule(
     "1.2",
+    "digoxine > 0.125mg/dag",
     "Ongunstige risico/batenverhouding (veiligere alternatieven beschikbaar); Risico op overdosering bij nierinsufficiëntie: nausea, braken, slaperigheid, gezichtsstoornissen, hartritmestoornissen",
-    "",
-    "",
+    "1. Evalueer opnieuw of de indicatie nog steeds aanwezig is, zo niet: stop de therapie \n 2. Indien therapie nodig is: verlaag de dosis van digoxine tot ≤ 0,125 mg/dag en adviseer om de digoxineserumspiegel te controleren",
     new OrExpression(
       new DrugEntry(
         new Drug("Digoxine > 0,125 mg/dag", ["C01AA05"]),

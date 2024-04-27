@@ -60,4 +60,17 @@ describe("test rule 1.2", () => {
   let result2 = evaluate(input2);
 
   test("incorrect dosage doesn't match", () => assert.equal(result2.length, 0));
+
+  let input3 = new Gheop3sInput(70, Gender.FEMALE, [
+    new DrugEntry(
+      new Drug("Digoxine", ["C02AC01"]),
+      "C01AA05",
+      Frequency.CHRONIC,
+      250,
+      Interval.DAILY,
+    ),
+  ]);
+  let result3 = evaluate(input3);
+
+  test("heavy dosage does match", () => assert.equal(result3.length, 1));
 });

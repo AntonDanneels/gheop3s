@@ -1,29 +1,25 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
+import {
+  rules,
+  evaluate,
+  Gheop3sInput,
+  Drug,
+  DrugEntry,
+  Gender,
+  Frequency,
+  Interval,
+  Rule,
+} from "./gheop3s";
+
 import Fuse from "fuse.js";
-
-class Drugs {
-  constructor(
-    public name: string,
-    public atc: string,
-  ) {}
-}
-
-class DrugEntry {
-  constructor(
-    public drugs: Drugs,
-    public urgency: string,
-    public dosage: number,
-    public dosageInterval: string,
-  ) {}
-}
 
 function DropDownSearch({ drugSearch, selectedVal, onChange }) {
   let [isActive, setActive] = useState(false);
   let [selectedText, setSelectedText] = useState(selectedVal);
 
-  let [proposedItems, setProposedItems] = useState(new Array<Drugs>());
+  let [proposedItems, setProposedItems] = useState(new Array<Drug>());
 
   return (
     <div className={"dropdown dropdownsearch " + (isActive ? "is-active" : "")}>
@@ -57,7 +53,7 @@ function DropDownSearch({ drugSearch, selectedVal, onChange }) {
               }}
             />
           </div>
-          {proposedItems.map((item: Drugs, index: number) => {
+          {proposedItems.map((item: Drug, index: number) => {
             return (
               <a
                 key={index}
@@ -91,8 +87,9 @@ function TextInput({ initialValue, onChange }) {
         pattern="[0-9]+"
         value={value}
         onChange={(event) => {
-          setValue(event.target.value.replace(/\D/g, ""));
-          onChange(value);
+          let newValue = parseFloat(event.target.value.replace(/\D/g, ""));
+          setValue(newValue);
+          onChange(newValue);
         }}
       />
     </div>
@@ -102,12 +99,12 @@ function TextInput({ initialValue, onChange }) {
 function DrugEntryRow({ drugSearch, params, completed, onSubmit, onDelete }) {
   let [error, setError] = useState("");
   let [drugs, setDrugs] = useState(
-    params ? params.drugs : new Drugs("invalid", "invalid"),
+    params ? params.drug : new Drug("invalid", ["invalid"]),
   );
   let [urgency, setUrgency] = useState(params ? params.urgency : "chronic");
   let [dosage, setDosage] = useState(params ? params.dosage : 0);
   let [dosageInterval, setDosageInterval] = useState(
-    params ? params.dosageInterval : "",
+    params ? params.dosageInterval : Interval.HOURLY,
   );
 
   console.log("mounted DrugEntryRow");
@@ -119,8 +116,8 @@ function DrugEntryRow({ drugSearch, params, completed, onSubmit, onDelete }) {
         <div className="column">
           <DropDownSearch
             drugSearch={drugSearch}
-            selectedVal={drugs.name === "invalid" ? "" : drugs}
-            onChange={(item: Drugs) => {
+            selectedVal={drugs.name === "invalid" ? "" : drugs.name}
+            onChange={(item: Drug) => {
               setDrugs(item);
             }}
           />
@@ -153,17 +150,17 @@ function DrugEntryRow({ drugSearch, params, completed, onSubmit, onDelete }) {
                 className="is-expanded"
                 onChange={(event) => {
                   setDosageInterval(event.target.value);
-                  console.log(event.target.value);
                 }}
+                defaultValue={dosageInterval}
               >
-                <option value="hourly">per hour</option>
-                <option value="daily">per day</option>
-                <option value="weekly">per week</option>
-                <option value="biweekly">per 2 weeks</option>
-                <option value="monthly">per month</option>
-                <option value="quarterly">per 3 months</option>
-                <option value="yearly">per year</option>
-                <option value="other">other</option>
+                <option value={Interval.HOURLY}>per hour</option>
+                <option value={Interval.DAILY}>per day</option>
+                <option value={Interval.WEEKLY}>per week</option>
+                <option value={Interval.BIWEEKLY}>per 2 weeks</option>
+                <option value={Interval.MONTHLY}>per month</option>
+                <option value={Interval.QUARTERLY}>per 3 months</option>
+                <option value={Interval.YEARLY}>per year</option>
+                <option value={Interval.ANY}>other</option>
               </select>
             </div>
           </div>
@@ -185,12 +182,14 @@ function DrugEntryRow({ drugSearch, params, completed, onSubmit, onDelete }) {
                   setError("Invalid dosis interval");
                 } else {
                   onSubmit(
-                    new DrugEntry(drugs, urgency, dosage, dosageInterval),
+                    new DrugEntry(
+                      drugs,
+                      drugs.atcs[0],
+                      urgency,
+                      dosage,
+                      dosageInterval,
+                    ),
                   );
-                  setDrugs(new Drugs("invalid", "invalid"));
-                  setUrgency("chronic");
-                  setDosage(0);
-                  setDosageInterval("");
                 }
               } else {
                 onDelete();
@@ -215,33 +214,39 @@ function DrugEntryRow({ drugSearch, params, completed, onSubmit, onDelete }) {
   );
 }
 
-function ResultRow({}) {
+function ResultRow({ rule }) {
   return (
     <div className="columns">
-      <div className="column">Dipyridamol</div>
-      <div className="column">Veiligere alternatieven beschikbaar.</div>
-      <div className="column">Vervang door acetylsalicylzuur</div>
+      <div className="column">{rule.name}</div>
+      <div className="column">{rule.criteria}</div>
+      <div className="column">{rule.description}</div>
+      <div className="column">{rule.alternative}</div>
     </div>
   );
 }
 
 function App() {
   let [selectedDrugs, setSelectedDrugs] = useState(Array<DrugEntry>());
-  let [drugs, setDrugs] = useState(Array<Drugs>());
-  let [search, setSearch] = useState(new Fuse(new Array<Drugs>(), {}));
+  let [drugs, setDrugs] = useState(Array<Drug>());
+  let [search, setSearch] = useState(new Fuse(drugs, {}));
   let [loading, setLoading] = useState(false);
   let [file, setFile] = useState("");
+  let [key, setKey] = useState(new Date().toString());
+  let [rules, setRules] = useState(new Array<Rule>());
 
   console.log("mounted app");
 
   useEffect(() => {
     if (loading) {
-      let newDrugs: Array<Drugs> = [];
+      let newDrugs: Array<Drug> = [];
       file.split("\n").map((line) => {
         let parts = line.split(";");
-        if (parts[1] && parts[5]) {
+        if (parts[1] && parts[4]) {
+          let regex = /['"]+/g;
           newDrugs.push(
-            new Drugs(parts[1].substring(1, parts[1].length - 1), parts[5]),
+            new Drug(parts[1].replace(regex, ""), [
+              parts[4].replace(regex, ""),
+            ]),
           );
         }
       });
@@ -336,18 +341,32 @@ function App() {
           );
         })}
         <DrugEntryRow
+          key={key}
           completed={false}
           drugSearch={search}
           params={null}
           onSubmit={(result: DrugEntry) => {
-            setSelectedDrugs((drugs) => [...drugs, result]);
+            setSelectedDrugs([...selectedDrugs, result]);
+            setKey(new Date().toString());
           }}
           onDelete={() => {}}
         />
         <hr />
         <div className="field">
           <div className="control">
-            <button className="button is-primary">Calculate</button>
+            <button
+              className="button is-primary"
+              onClick={() => {
+                let input = new Gheop3sInput(70, Gender.MALE, selectedDrugs);
+                let rules = evaluate(input);
+
+                console.log(rules);
+
+                setRules(rules);
+              }}
+            >
+              Calculate
+            </button>
           </div>
         </div>
       </div>
@@ -355,18 +374,26 @@ function App() {
       <div className="box">
         <div className="columns">
           <div className="column">
-            <label className="label">Drugs</label>
+            <label className="label">Entry</label>
           </div>
           <div className="column">
-            <label className="label">Rationale</label>
+            <label className="label">Criteria</label>
+          </div>
+          <div className="column">
+            <label className="label">Description</label>
           </div>
           <div className="column">
             <label className="label">Alternatives</label>
           </div>
         </div>
-        <ResultRow />
-        <hr />
-        <ResultRow />
+        {rules.map((rule, index) => {
+          return (
+            <div key={index}>
+              <ResultRow rule={rule} />
+              <hr />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
