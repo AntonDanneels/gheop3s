@@ -241,7 +241,7 @@ function App() {
         let parts = line.split(";");
         if (parts[1] && parts[5]) {
           newDrugs.push(
-            new Drugs(parts[1].substring(1, parts[1].length - 2), parts[5]),
+            new Drugs(parts[1].substring(1, parts[1].length - 1), parts[5]),
           );
         }
       });
