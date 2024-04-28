@@ -88,9 +88,12 @@ function TextInput({ initialValue, onChange }) {
         pattern="[0-9]+"
         value={value}
         onChange={(event) => {
-          let newValue = parseFloat(event.target.value.replace(/\D/g, ""));
-          setValue(newValue);
-          onChange(newValue);
+          let newValue =
+            event.target.value.length > 0 ? parseFloat(event.target.value) : 0;
+          setValue(event.target.value);
+          if (!isNaN(newValue)) {
+            onChange(newValue);
+          }
         }}
       />
     </div>
@@ -138,7 +141,7 @@ function DrugEntryRow({ drugSearch, params, completed, onSubmit, onDelete }) {
             </select>
           </div>
         </div>
-        <div className="column">
+        <div className="column is-one-third">
           <div className="field has-addons">
             <TextInput
               initialValue={dosage}
@@ -146,6 +149,19 @@ function DrugEntryRow({ drugSearch, params, completed, onSubmit, onDelete }) {
                 setDosage(val);
               }}
             />
+            <div className="select">
+              <select
+                className="is-expanded"
+                onChange={(event) => {}}
+                defaultValue="mg"
+              >
+                <option value="mg">mg</option>
+                <option value="ug">ug</option>
+                <option value="g">g</option>
+                <option value="ml">ml</option>
+                <option value="spoon">spoon</option>
+              </select>
+            </div>
             <div className="select">
               <select
                 className="is-expanded"
@@ -268,6 +284,11 @@ function App() {
   return (
     <div className="app">
       <h1 className="title">GheOP3s</h1>
+      <div className="notification is-warning is-light">
+        <h2 className="subtitle">
+          Experimental - not for medical use: double check any result you get!
+        </h2>
+      </div>
       <div className="field">
         <input
           className="input"
