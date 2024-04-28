@@ -543,9 +543,9 @@ export const rules = [
   ),
   new Rule(
     "2.27",
-    "",
-    "",
-    "",
+    "Niet-cardioselectieve β-blokkers (bv. carvedilol, labetalol, propranolol, timolol in oogdruppels) bij: Astma of COPD",
+    "Kunnen	astma/COPD verergeren",
+    "Overweeg een cardioselectieve β-blokker (bv. acebutolol, atenolol, betaxolol, bisoprolol, celiprolol, metoprolol,nebivolol) in de laagst mogelijke dosis of een ander geschikt geneesmiddel",
     new AndExpression([
       new AnyExpression(
         new DrugEntry(
@@ -586,9 +586,9 @@ export const rules = [
   ),
   new Rule(
     "2.28",
-    "",
-    "",
-    "",
+    "Anti-emetica die de dopaminereceptor inhiberen (bv. alizapride, metoclopramide) bij: ziekte van Parkinson",
+    "Dopaminereceptorantagonist en kunnen de symptomen van de ziekte van Parkinson verergeren",
+    "1. Evalueer opnieuw of de indicatie nog steeds aanwezig is, zo niet: stop de therapie 2. Als therapie nodig is: bespreek de niet-farmacologische aanpak en overweeg domperidon in de laagst mogelijke dosis en beperk de gebruiksduur (max. 7 dagen)",
     new AndExpression([
       new AnyExpression(
         new DrugEntry(
@@ -615,9 +615,9 @@ export const rules = [
   ),
   new Rule(
     /* TODO */ "2.29",
-    "",
-    "",
-    "",
+    "Geneesmiddelen die constipatie kunnen veroorzaken: opioïden, diltiazem, verapamil, geneesmiddelen met anticholinerge eigenschappen (bv. antihistaminica, antidepressiva, anti-epileptica, antiparkinsonmiddelen, antipsychotica, spasmolytica, zie Tabel A), calcium, aluminiumbevattende antacida bij: Constipatie",
+    "Kunnen	constipatie verergeren",
+    "    1. Evalueer opnieuw of de indicatie nog steeds aanwezig is, zo niet: stop de therapie 2. Als therapie nodig is: verkies overschakeling naar een veiliger alternatief met dezelfde indicatie (bv. met geen of minder anticholinerge werking, zie Tabel A) 3. Indien niet mogelijk: overweeg een dosisverlaging en beperk de gebruiksduur 4. Bespreek de niet-farmacologische aanpak van constipatie en voeg (indien nodig) een osmotisch laxativum toe",
     new AndExpression([
       new AnyExpression(
         new DrugEntry(new Drug("", []), "", Frequency.ANY, 0.1, Interval.ANY),
@@ -629,9 +629,9 @@ export const rules = [
   ),
   new Rule(
     "2.30",
-    "",
-    "",
-    "",
+    "Predniso(lo)nequivalent > 7,5 mg/dag bij: diabetes",
+    "Kan diabetes mellitus verergeren",
+    "1. Waarschuw de patiënt voor mogelijke ontregeling van de bloedglucosespiegel en adviseer om de bloedglucosespiegel en bloeddruk meer op te volgen 2. Indien mogelijk: overweeg een dosisverlaging van het corticosteroïd en beperk de gebruiksduur",
     new AndExpression([
       new AnyExpression(
         new DrugEntry(
@@ -655,9 +655,9 @@ export const rules = [
   ),
   new Rule(
     "2.31",
-    "",
-    "",
-    "",
+    "Antipsychotica behalve clozapine of quetiapine bij: ziekte van Parkinson",
+    "Dopaminereceptorantagonist en kunnen de symptomen van de ziekte van Parkinson verergeren",
+    "1. Bespreek met de specialist: dosisaanpassing/vervanging van Parkinson medicatie die de psychotische symptomen mogelijk heeft veroorzaakt of een dosisverlaging en/of eventuele stop van het antipsychoticum 2. Als therapie nodig is: bespreek het overschakelen naar clozapine of quetiapine met de specialist, bij voorkeur in een lagere dosis voor patiënten met de ziekte van Parkinson",
     new AndExpression([
       new AnyExpression(
         new DrugEntry(
@@ -687,9 +687,9 @@ export const rules = [
   ),
   new Rule(
     "2.32" /*TODO*/,
-    "",
-    "",
-    "",
+    "Geneesmiddelen met anticholinerge eigenschappen (bv. antihistaminica, antidepressiva, antipsychotica, spasmolytica, zie Tabel A) bij: Benigne prostaathypertrofie",
+    "Verhoogd	risico	op anticholinerge ongewenste effecten kan de urinestroom verminderen en urineretentie veroorzaken",
+    "1. Evalueer opnieuw of de indicatie nog steeds aanwezig is, zo niet: stop de therapie 2. Als therapie nodig is: overweeg een niet-farmacologische aanpak en/of verkies een overschakeling naar een veiliger geneesmiddel met dezelfde indicatie met geen of minder anticholinerge werking (zie Tabel A) 3. Indien niet mogelijk: overweeg een dosisverlaging en beperk de gebruiksduur",
     new AndExpression([
       new AnyExpression(
         new DrugEntry(new Drug("", []), "", Frequency.ANY, 0.1, Interval.ANY),
@@ -701,9 +701,9 @@ export const rules = [
   ),
   new Rule(
     "2.33" /*TODO*/,
-    "",
-    "",
-    "",
+    "Geneesmiddelen met anticholinerge eigenschappen (bv. antihistaminica, antidepressiva, antipsychotica, spasmolytica, zie Tabel A) bij: Dementie/ verminderde cognitie",
+    "Een verhoogde anticholinerge medicatielast kan de cognitieve en gedragsfunctie verslechteren; Verhoogd risico op ongewenste effecten t.h.v. het centraal zenuwstelsel",
+    "1. Evalueer opnieuw of de indicatie nog steeds aanwezig is, zo niet: stop de therapie 2. Als therapie nodig is: bespreek de niet-farmacologische aanpak. Verkies overschakeling naar een veiliger alternatief met dezelfde indicatie met geen of minder anticholinerge werking (zie Tabel A) 3. Indien niet mogelijk: overweeg een dosisverlaging en beperk de gebruiksduur",
     new AndExpression([
       new AnyExpression(
         new DrugEntry(new Drug("", []), "", Frequency.ANY, 0.1, Interval.ANY),
@@ -717,9 +717,9 @@ export const rules = [
   /* List 3 */
   new Rule(
     "3.34" /*TODO*/,
-    "",
-    "",
-    "",
+    "Predniso(lo)nequivalent van ≥ 7,5 mg/dag voor ≥ 3 maanden zonder calcium/vitamine D suppletie en bisfosfonaat",
+    "Langdurig gebruik van corticosteroïden is geassocieerd met een verhoogd risico op botverlies en fracturen",
+    "1. Als langdurige corticosteroïdtherapie nodig is: bespreek de niet-farmacologische aanpak om het risico op vallen en fracturen te verminderen 2. Start met calcium/vitamine D en overweeg om een bisfosfonaat (bv. alendronaat) te starten volgens de nationale richtlijnen",
     new AndExpression([
       new AnyExpression(
         new DrugEntry(
@@ -769,9 +769,9 @@ export const rules = [
   ),
   new Rule(
     "3.35",
-    "",
-    "",
-    "",
+    "Opioïd zonder laxativum",
+    "Opioïden hebben een nadelige invloed op de sensomotorische functie van het gastro-intestinale kanaal, wat kan leiden tot darmstoornissen die een spectrum van symptomen kunnen omvatten zoals nausea, braken, opgeblazen gevoel, gastro-oesofageale reflux-gerelateerde symptomen en constipatie",
+    "1. Evalueer opnieuw  of  de  indicatie  voor  opioïden  nog  steeds  aanwezig  is,  zo niet: stop de therapie (zie criterium 14 ‘Opioïden’) 2. Als therapie nodig is: bespreek de niet-farmacologische aanpak van constipatie en overweeg om een osmotisch laxativum te starten (vooral bij chronisch gebruik)",
     new AndExpression([
       new AnyExpression(
         new DrugEntry(
@@ -797,9 +797,9 @@ export const rules = [
   ),
   new Rule(
     "3.36",
-    "",
-    "",
-    "",
+    "Methotrexaat zonder foliumzuursupplement",
+    "Methotrexaat (een antimetaboliet) heeft een antagonistisch effect op het foliumzuurmetabolisme, wat kan leiden tot mucosale, gastro- intestinale, hepatische of hematologische ongewenste effecten; Suppletie met foliumzuur of folinezuur kan deze ongewenste effecten verminderen",
+    "Voeg een foliumzuursupplement toe: eenmaal per week 5 tot 10 mg (één dag na de inname van methotrexaat), of dagelijks 1 mg",
     new AndExpression([
       new AnyExpression(
         new DrugEntry(
@@ -832,9 +832,9 @@ export const rules = [
   ),
   new Rule(
     "3.37",
-    "",
-    "",
-    "",
+    "Osteoporose therapie (bv. bisfosfonaten, denosumab, selectieve oestrogeenreceptor-modulatoren, teriparatide) zonder voldoende calcium/vitamine D",
+    "Gecombineerde calcium- en vitamine D supplementen in een dagelijkse dosis van respectievelijk 0,5-1,2 g en 400-800 IE worden over het algemeen aanbevolen bij mensen die osteoporotische therapie krijgen, aangezien de evidentie voor de werkzaamheid van deze interventies voornamelijk gebaseerd is op gelijktijdige toediening van het geneesmiddel met calcium- en vitamine D supplementen",
+    "1. Evalueer opnieuw of de osteoporotische therapie nog steeds nodig is (< 5 jaar of 5 tot 10 jaar voor hoogrisicopatiënten), zo niet (> 5 jaar en geen hoogrisicopatiënt): stop de therapie 2. Als therapie nog steeds nodig is: start calcium (dosis afhankelijk van de inname via voeding) en vitamine D",
     new AndExpression([
       new OrExpression([
         new AnyExpression(
@@ -902,9 +902,9 @@ export const rules = [
   ),
   new Rule(
     "2.38" /* TODO */,
-    "",
-    "",
-    "",
+    "Oudere persoon zonder jaarlijkse griepvaccinatie",
+    "Influenza    bij    oudere   personen   kan	respiratoire complicaties veroorzaken (bv. pneumonie, exacerbatie van chronische respiratoire aandoening, ziekenhuisopnames en overlijden)",
+    "Bespreek de noodzaak van een griepvaccinatie met de arts en patiënt",
     new AndExpression([
       new AnyExpression(
         new DrugEntry(new Drug("", []), "", Frequency.ANY, 0.1, Interval.ANY),
@@ -913,9 +913,9 @@ export const rules = [
   ),
   new Rule(
     "2.39" /* TODO */,
-    "",
-    "",
-    "",
+    "Oudere persoon met een hoog risico op pneumokokkeninfectie zonder pneumokokkenvaccinatie",
+    "Streptococcus pneumoniae is verantwoordelijk voor een aanzienlijke ziektelast en sterfte bij volwassenen wereldwijd, meestal door een pneumonie en minder vaak door invasieve pneumokokkeninfectie; Vaccinatie zou deze ziekte en sterfte kunnen verminderen",
+    "Bespreek de noodzaak van een pneumokokkenvaccinatie met de arts en patiënt.",
     new AndExpression([
       new AnyExpression(
         new DrugEntry(new Drug("", []), "", Frequency.ANY, 0.1, Interval.ANY),
