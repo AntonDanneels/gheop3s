@@ -3,7 +3,6 @@ import "./App.css";
 import { ATCDPP } from "./assets/ATCDPP";
 
 import {
-  rules,
   evaluate,
   Gheop3sInput,
   Drug,
@@ -257,6 +256,26 @@ function parseCsv(file: string) {
   return newDrugs;
 }
 
+function Navbar() {
+  return (
+    <nav
+      className="navbar is-link"
+      role="navigation"
+      aria-label="main navigation"
+    >
+      <div className="navbar-brand">
+        <a className="navbar-item">Gheop3s</a>
+      </div>
+      <div className="navbar-menu">
+        <div className="navbar-end">
+          <a className="navbar-item">Documentation</a>
+          <a className="navbar-item">About</a>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
 function App() {
   let [selectedDrugs, setSelectedDrugs] = useState(Array<DrugEntry>());
   let [drugs, setDrugs] = useState(parseCsv(ATCDPP));
@@ -282,144 +301,150 @@ function App() {
   }, [loading]);
 
   return (
-    <div className="app">
-      <h1 className="title">GheOP3s</h1>
-      <div className="notification is-warning is-light">
-        <h2 className="subtitle">
-          Experimental - not for medical use: double check any result you get!
-        </h2>
-      </div>
-      <div className="field">
-        <input
-          className="input"
-          type="file"
-          id="atc-codes"
-          name="atc-codes"
-          onChange={(event) => {
-            if (
-              event.target &&
-              event.target.files &&
-              event.target.files.length > 0
-            ) {
-              event.target.files[0].text().then((content) => {
-                setLoading(true);
-                setFile(content);
-              });
-            }
-          }}
-        />
-        {loading && <h1>Loading...</h1>}
-      </div>
-      <div className="box">
-        <div className="field is-grouped">
-          <div className="field">
-            <label className="label">Name</label>
-            <div className="control">
-              <input className="input" type="text" placeholder="Text input" />
+    <div>
+      <Navbar />
+      <div className="app container">
+        <div className="notification is-warning is-light">
+          <h2 className="subtitle">
+            Experimental - not for medical use: double check any result you get!
+          </h2>
+        </div>
+        <div className="field">
+          <input
+            className="input"
+            type="file"
+            id="atc-codes"
+            name="atc-codes"
+            onChange={(event) => {
+              if (
+                event.target &&
+                event.target.files &&
+                event.target.files.length > 0
+              ) {
+                event.target.files[0].text().then((content) => {
+                  setLoading(true);
+                  setFile(content);
+                });
+              }
+            }}
+          />
+          {loading && <h1>Loading...</h1>}
+        </div>
+        <div className="box">
+          <div className="field is-grouped">
+            <div className="field">
+              <label className="label">Name</label>
+              <div className="control">
+                <input className="input" type="text" placeholder="Text input" />
+              </div>
             </div>
-          </div>
-          <div className="field">
-            <label className="label">Age</label>
-            <div className="control">
-              <input className="input" type="number" placeholder="Text input" />
+            <div className="field">
+              <label className="label">Age</label>
+              <div className="control">
+                <input
+                  className="input"
+                  type="number"
+                  placeholder="Text input"
+                />
+              </div>
             </div>
-          </div>
-          <div className="field">
-            <label className="label">Sex</label>
-            <div className="control">
-              <div className="select">
-                <select>
-                  <option>Male</option>
-                  <option>Female</option>
-                  <option>X</option>
-                </select>
+            <div className="field">
+              <label className="label">Sex</label>
+              <div className="control">
+                <div className="select">
+                  <select>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>X</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <hr />
-        <div className="columns">
-          <div className="column is-flex is-flex-direction-column is-align-items-center">
-            <label className="label">Drugs</label>
-          </div>
-          <div className="column is-flex is-flex-direction-column is-align-items-center">
-            <label className="label">Urgency</label>
-          </div>
-          <div className="column is-flex is-flex-direction-column is-align-items-center">
-            <label className="label">Dosage</label>
-          </div>
-          <div className="column"></div>
-        </div>
-        {selectedDrugs.map((entry: DrugEntry, index: number) => {
-          return (
-            <DrugEntryRow
-              key={index}
-              params={entry}
-              drugSearch={search}
-              completed={true}
-              onSubmit={(_result: DrugEntry) => {}}
-              onDelete={() => {
-                setSelectedDrugs(
-                  selectedDrugs.filter((_entry, i) => i !== index),
-                );
-              }}
-            />
-          );
-        })}
-        <DrugEntryRow
-          key={key}
-          completed={false}
-          drugSearch={search}
-          params={null}
-          onSubmit={(result: DrugEntry) => {
-            setSelectedDrugs([...selectedDrugs, result]);
-            setKey(new Date().toString());
-          }}
-          onDelete={() => {}}
-        />
-        <hr />
-        <div className="field">
-          <div className="control">
-            <button
-              className="button is-primary"
-              onClick={() => {
-                let input = new Gheop3sInput(70, Gender.MALE, selectedDrugs);
-                let rules = evaluate(input);
-
-                console.log(rules);
-
-                setRules(rules);
-              }}
-            >
-              Calculate
-            </button>
-          </div>
-        </div>
-      </div>
-      <h1 className="title">Results</h1>
-      <div className="box">
-        <div className="columns">
-          <div className="column">
-            <label className="label">Entry</label>
-          </div>
-          <div className="column">
-            <label className="label">Criteria</label>
-          </div>
-          <div className="column">
-            <label className="label">Description</label>
-          </div>
-          <div className="column">
-            <label className="label">Alternatives</label>
-          </div>
-        </div>
-        {rules.map((rule, index) => {
-          return (
-            <div key={index}>
-              <ResultRow rule={rule} />
-              <hr />
+          <hr />
+          <div className="columns">
+            <div className="column is-flex is-flex-direction-column is-align-items-center">
+              <label className="label">Drugs</label>
             </div>
-          );
-        })}
+            <div className="column is-flex is-flex-direction-column is-align-items-center">
+              <label className="label">Urgency</label>
+            </div>
+            <div className="column is-flex is-flex-direction-column is-align-items-center">
+              <label className="label">Dosage</label>
+            </div>
+            <div className="column"></div>
+          </div>
+          {selectedDrugs.map((entry: DrugEntry, index: number) => {
+            return (
+              <DrugEntryRow
+                key={index}
+                params={entry}
+                drugSearch={search}
+                completed={true}
+                onSubmit={(_result: DrugEntry) => {}}
+                onDelete={() => {
+                  setSelectedDrugs(
+                    selectedDrugs.filter((_entry, i) => i !== index),
+                  );
+                }}
+              />
+            );
+          })}
+          <DrugEntryRow
+            key={key}
+            completed={false}
+            drugSearch={search}
+            params={null}
+            onSubmit={(result: DrugEntry) => {
+              setSelectedDrugs([...selectedDrugs, result]);
+              setKey(new Date().toString());
+            }}
+            onDelete={() => {}}
+          />
+          <hr />
+          <div className="field">
+            <div className="control">
+              <button
+                className="button is-primary"
+                onClick={() => {
+                  let input = new Gheop3sInput(70, Gender.MALE, selectedDrugs);
+                  let rules = evaluate(input);
+
+                  console.log(rules);
+
+                  setRules(rules);
+                }}
+              >
+                Calculate
+              </button>
+            </div>
+          </div>
+        </div>
+        <h1 className="title">Results</h1>
+        <div className="box">
+          <div className="columns">
+            <div className="column">
+              <label className="label">Entry</label>
+            </div>
+            <div className="column">
+              <label className="label">Criteria</label>
+            </div>
+            <div className="column">
+              <label className="label">Description</label>
+            </div>
+            <div className="column">
+              <label className="label">Alternatives</label>
+            </div>
+          </div>
+          {rules.map((rule, index) => {
+            return (
+              <div key={index}>
+                <ResultRow rule={rule} />
+                <hr />
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
