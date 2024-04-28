@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import { ATCDPP } from "./assets/ATCDPP";
 
 import {
   rules,
@@ -225,10 +226,25 @@ function ResultRow({ rule }) {
   );
 }
 
+function parseCsv(file: string) {
+  let newDrugs: Array<Drug> = [];
+  file.split("\n").map((line) => {
+    let parts = line.split(";");
+    if (parts[1] && parts[4]) {
+      let regex = /['"]+/g;
+      newDrugs.push(
+        new Drug(parts[1].replace(regex, ""), [parts[4].replace(regex, "")]),
+      );
+    }
+  });
+
+  return newDrugs;
+}
+
 function App() {
   let [selectedDrugs, setSelectedDrugs] = useState(Array<DrugEntry>());
-  let [drugs, setDrugs] = useState(Array<Drug>());
-  let [search, setSearch] = useState(new Fuse(drugs, {}));
+  let [drugs, setDrugs] = useState(parseCsv(ATCDPP));
+  let [search, setSearch] = useState(new Fuse(drugs, { keys: ["name"] }));
   let [loading, setLoading] = useState(false);
   let [file, setFile] = useState("");
   let [key, setKey] = useState(new Date().toString());
@@ -238,18 +254,7 @@ function App() {
 
   useEffect(() => {
     if (loading) {
-      let newDrugs: Array<Drug> = [];
-      file.split("\n").map((line) => {
-        let parts = line.split(";");
-        if (parts[1] && parts[4]) {
-          let regex = /['"]+/g;
-          newDrugs.push(
-            new Drug(parts[1].replace(regex, ""), [
-              parts[4].replace(regex, ""),
-            ]),
-          );
-        }
-      });
+      let newDrugs = parseCsv(file);
       setDrugs(newDrugs);
       setLoading(false);
       setSearch(
